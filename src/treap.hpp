@@ -27,13 +27,13 @@ struct TreapNode {
     Key key;
     Value val;
     const Priority &priority;
-    std::unique_ptr<node<Key,Value,Priority>> left;
-    std::unique_ptr<node<Key,Value,Priority>> right;
+    std::unique_ptr<TreapNode<Key,Value,Priority>> left;
+    std::unique_ptr<TreapNode<Key,Value,Priority>> right;
 
     // extra size field for maintaining order statistics
     int size;
 
-    TreapNode(const Key& k, const Value& v, const Priority &p, node* l=nullptr, node*r = nullptr)
+    TreapNode(const Key& k, const Value& v, const Priority &p, node* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
     : Key(k), val(v), left(l), right(r), size(1), priority(p)
     {}
 };
@@ -101,7 +101,8 @@ public:
     bool empty() { return !root;}
 };
 
-inline std::ostream &operator <<(std::ostream&os, const Treap& it)
+template
+inline std::ostream &operator <<(std::ostream&os, const Treap<Key, Value, Priority>& it)
 {
     it.in_order(os);
     return os;
