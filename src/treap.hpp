@@ -26,7 +26,7 @@ template <class Key, class Value, class Priority>
 struct TreapNode {
     Key key;
     Value val;
-    const Priority &priority;
+    Priority priority;
     std::unique_ptr<TreapNode<Key,Value,Priority>> left;
     std::unique_ptr<TreapNode<Key,Value,Priority>> right;
 
