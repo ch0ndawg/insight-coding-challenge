@@ -157,16 +157,14 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, c
 {
     // a one-element treap
     Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(k, data)));
-    if (index==-1) {
-        merge(temp);
-    } else {
-        // split the tree at index
-        auto right_tree = split(index);
-        // merge with the newly created node
-        merge(temp);
-        // merge with the right tree
-        merge(right_tree);
-    }
+
+    // split the tree at index
+    auto right_tree = split(k);
+    // merge with the newly created node
+    merge(temp);
+    // merge with the right tree
+    merge(right_tree);
+
     // (merge and split take care of all size management)
     return *this;
 }
@@ -175,9 +173,9 @@ template<class Key, class Value, class Priority>
 Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::remove(const Key& k)
 {
     // get the right tree
-    auto right_tree = split(index);
+    auto right_tree = split(k);
     // toss the actual element by splitting. The unused return value will call the destructor
-    split(index-1);
+    // split(index-1); // find immediate predecessor
     // merge with the remainder
     merge(right_tree);
     return *this;
