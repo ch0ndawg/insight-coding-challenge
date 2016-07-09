@@ -33,7 +33,7 @@ struct TreapNode {
     // extra size field for maintaining order statistics
     int size;
 
-    TreapNode(const Key& k, const Value& v, const Priority &p, node* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
+    TreapNode(const Key& k, const Value& v, const Priority &p, TreapNode<Key,Value,Priority>* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
     : Key(k), val(v), left(l), right(r), size(1), priority(p)
     {}
 };
@@ -101,7 +101,7 @@ public:
     bool empty() { return !root;}
 };
 
-template
+template <class Key, class Value, class Priority>
 inline std::ostream &operator <<(std::ostream&os, const Treap<Key, Value, Priority>& it)
 {
     it.in_order(os);
@@ -134,7 +134,7 @@ Treap<Key, Value, Priority>::Treap(Treap<Key, Value, Priority>&& other) = defaul
 
 // default move assignment swaps ownership with the expiring temporary
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority>& Treap::operator=(Treap &&other) = default;
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::operator=(Treap<Key, Value, Priority> &&other) = default;
 /*{
     // swap; then the old tree that was *this will be deallocated by the destructor
     node *temp = root;
@@ -152,10 +152,10 @@ Treap<Key, Value, Priority>& Treap::operator=(Treap &&other) = default;
     delete curr; // clean up this node
 }*/
 template<class Key, class Value, class Priority>
-Treap<class Key, class Value, class Priority>& Treap::insert(const Key& index, const Value &data)
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& index, const Value &data)
 {
     // a one-element treap
-    Treap temp(unique_ptr<node>(new node(data)));
+    Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(data)));
     if (index==-1) {
         merge(temp);
     } else {
@@ -170,7 +170,8 @@ Treap<class Key, class Value, class Priority>& Treap::insert(const Key& index, c
     return *this;
 }
 
-Treap& Treap::remove(int index)
+template<class Key, class Value, class Priority>
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::remove(const Key& k)
 {
     // get the right tree
     auto right_tree = split(index);
@@ -181,7 +182,8 @@ Treap& Treap::remove(int index)
     return *this;
 }
 
-Treap& Treap::merge(Treap &rhs)
+template<class Key, class Value, class Priority>
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value, Priority> &rhs)
 {
     // if current tree is empty, move rhs to it.
     if (empty()) {
@@ -217,7 +219,8 @@ Treap& Treap::merge(Treap &rhs)
     return *this;
 }
 
-Treap Treap::split(int index, int add)
+template<class Key, class Value, class Priority>
+Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(int index, int add)
 {
     Treap res;
     if (!empty()) {
@@ -261,21 +264,22 @@ Treap Treap::split(int index, int add)
     return res;
 }
 
-int Treap::getkey(node* theNode) const
-{ /*
-   node * curr = root.get();
-   while (true) {
-   while (curr)
-   } */
-    // we have to do inorder traversal (linear time)
-    // if we store the parents, this can be accomplished in logarithmic time
-    return 0;
-}
+//template<class Key, class Value, class Priority>
+//int Treap<Key,Value,Priority>::getkey(node* theNode) const
+//{ /*
+//   node * curr = root.get();
+//   while (true) {
+//   while (curr)
+//   } */
+//    // we have to do inorder traversal (linear time)
+//    // if we store the parents, this can be accomplished in logarithmic time
+//    return 0;
+//}
 // Array indexing operation: the implicit key
 // Basic strategy: count the predecessors using stored size information
 
 template <class Key, class Value, class Priority>
-typename Treap<Key, Value, Priority>::node *Treap::getNode(int index) const
+typename Treap<Key, Value, Priority>::node *Treap<Key, Value, Priority>::getNode(int index) const
 {
     // use raw pointers: here, we are using pointers in their *iterator* sense.
     node *curr = root.get();
@@ -301,16 +305,16 @@ typename Treap<Key, Value, Priority>::node *Treap::getNode(int index) const
     return curr;
 }
 
-// checked access
-const int & Treap::at(int index) const
-{
-    if (index < 0 || index >= size()) throw out_of_range("Tree out of bounds");
-    return (*this)[index];
-}
+//// checked access
+//const int & Treap::at(int index) const
+//{
+//    if (index < 0 || index >= size()) throw out_of_range("Tree out of bounds");
+//    return (*this)[index];
+//}
 
 
-
-void Treap::in_order(std::ostream &os, const unique_ptr<node>& curr) const
+template <class Key, class Value, class Priority>
+void Treap<Key, Value, Priority>::in_order(std::ostream &os, const std::unique_ptr<node>& curr) const
 {
     if (!curr) {
         return;
