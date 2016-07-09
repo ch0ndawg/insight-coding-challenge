@@ -80,7 +80,7 @@ public:
     Treap<Key, Value, Priority> &insert(const Key& k, const Value & data);
     Treap<Key, Value, Priority> &remove(const Key& k);
     Treap<Key, Value, Priority> &merge(Treap<Key, Value, Priority> &rhs);
-  //  Treap<Key, Value, Priority> split(int index, int add=0);
+    Treap<Key, Value, Priority> split(const Key &);
     Treap<Key, Value, Priority> split(std::unique_ptr<node> &curr);
 
 
@@ -95,7 +95,7 @@ public:
 
     Value &operator[](const Key &k) { return const_cast<Value&>(static_cast<const Treap<Key, Value, Priority>&>(*this)[index]); }
 
-    // int getkey(node* curr) const ; // unnecessary for explicit treaps
+    // int getkey(node* curr) const ; // unnecessary for explicit treaps; however may be useful for computing order statistic
     ~Treap();
 
     bool empty() { return !root;}
@@ -144,18 +144,19 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::operator=(Treap<Key, V
     return *this;
 } */
 
-/*void Treap::postorder_cleanup(node* curr)
+/*void Treap::postorder_cleanup(node* curr) // this is taken care of by smart pointers
 {
     if (!curr) return; // null: do nothing
     postorder_cleanup(curr->left); // clean up left subtree
     postorder_cleanup(curr->right); // clean up right subtree
     delete curr; // clean up this node
 }*/
+
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& index, const Value &data)
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, const Value &data)
 {
     // a one-element treap
-    Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(data)));
+    Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(k, data)));
     if (index==-1) {
         merge(temp);
     } else {
@@ -220,31 +221,29 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value
 }
 
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(int index, int add)
+Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index)
 {
     Treap res;
     if (!empty()) {
-        // for implicit key calculation
-        // second param. takes care of right children addition
-        int curr_pos = add + sz(root->left);
-        if (curr_pos <= index) {
+        
+        if (root->key <= index) {
             // cut off the right subtree
             Treap temp(std::move(root->right));
 
             // recursively split the right subtree,
             // store *its* right split in res and temp becomes *its* left split
-            res = temp.split(index,curr_pos+1);
+            res = temp.split(index);
 
             // make the temp's left split as the right subree part of this left split
             root->right = std::move(temp.root);
             // update size
             root->size =sz(root->left)+1+sz(root->right);
         } else {
-            // get the left subtree
+            // get (and cut off) the left subtree
             Treap temp(std::move(root->left));
 
             // split the left subtree, store *its* right split in res and temp becomes *its* left split
-            res = temp.split(index, add);
+            res = temp.split(index);
             // make this result the left subtree
             root->left = std::move(res.root);
 
