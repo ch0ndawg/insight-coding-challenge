@@ -14,6 +14,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <memory>
+#include <utility>
 
 // design decision: unique_ptrs help with memory management.
 // however they are subject to some restrictions: nodes may only have one owner
@@ -46,13 +47,15 @@ inline int sz(const std::unique_ptr<TreapNode<Key,Value,Priority>> &t)
 
 template<class Key, class Value, class Priority>
 class Treap {
-    // unwieldy
+    // get rid of unwieldy typename
     using node = TreapNode<Key, Value, Priority>;
 
     std::unique_ptr<node> root;
     //void postorder_cleanup(node* curr);
     void in_order(std::ostream &os, const std::unique_ptr<node>&) const;
-    node* get_node(int index) const; // basic iterator function; we may extend this but for now, privatize
+
+    // order statistics
+    node* getNode(int index) const; // basic iterator function; we may extend this but for now, privatize
 public:
     Treap() : root(nullptr) {}
 
@@ -76,7 +79,7 @@ public:
 
     Treap<Key, Value, Priority> &insert(const Key& k, const Value & data);
     Treap<Key, Value, Priority> &remove(const Key& k);
-    Treap<Key, Value, Priority> &merge(Treap &rhs);
+    Treap<Key, Value, Priority> &merge(Treap<Key, Value, Priority> &rhs);
   //  Treap<Key, Value, Priority> split(int index, int add=0);
     Treap<Key, Value, Priority> split(std::unique_ptr<node> &curr);
 
@@ -84,12 +87,15 @@ public:
 
     void in_order(std::ostream &os) const { in_order(os,root); }
     int size() const { return sz(root); }
-    const int &operator[](int index) const {return get_node(index)->val; } // array indexing
-    int &operator[](int index) { return const_cast<int&>(static_cast<const Treap<Key, Value, Priority>&>(*this)[index]); }
-    const int &at(int index) const; // array indexing, checked
-    int &at(int index) { return const_cast<int&>(static_cast<const Treap<Key, Value, Priority>&>(*this).at(index)); }
 
-    int getkey(node* curr) const ;
+    // subscripting
+    const Value &operator[](const Key &k) const;
+    std::pair<Key, Value> orderStatistic(int index) const
+    { node res = getNode(index); return std::make_pair(res->key,res->val); } // array indexing
+
+    Value &operator[](const Key &k) { return const_cast<Value&>(static_cast<const Treap<Key, Value, Priority>&>(*this)[index]); }
+
+    // int getkey(node* curr) const ; // unnecessary for explicit treaps
     ~Treap();
 
     bool empty() { return !root;}
@@ -144,10 +150,8 @@ Treap<Key, Value, Priority>& Treap::operator=(Treap &&other) = default;
     postorder_cleanup(curr->right); // clean up right subtree
     delete curr; // clean up this node
 }*/
-
-// Insert, using priorities.
-
-Treap& Treap::insert(int data, int index)
+template<class Key, class Value, class Priority>
+Treap<class Key, class Value, class Priority>& Treap::insert(const Key& index, const Value &data)
 {
     // a one-element treap
     Treap temp(unique_ptr<node>(new node(data)));
@@ -269,7 +273,8 @@ int Treap::getkey(node* theNode) const
 // Array indexing operation: the implicit key
 // Basic strategy: count the predecessors using stored size information
 
-node *Treap::get_node(int index) const
+template <class Key, class Value, class Priority>
+typename Treap<Key, Value, Priority>::node *Treap::getNode(int index) const
 {
     // use raw pointers: here, we are using pointers in their *iterator* sense.
     node *curr = root.get();
