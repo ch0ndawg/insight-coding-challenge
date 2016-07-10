@@ -17,8 +17,10 @@ public:
 };
 
 // this will be the key for the median updates tree. It is ordered lexicographically.
+// this will be converted to a native format as an optimization,
+// but for now, we keep it here for proof of concept
 using DegName = std::pair<int, std::string>;
-class JsonDateCompare {
+struct JsonDateCompare {
     bool operator()(const nlohmann::json &lhs, const nlohmann::json& rhs) {
         return lhs["Date"] < rhs["Date"];
     }
@@ -34,10 +36,11 @@ public:
     // Will branch to make a version that uses dates as priorities, eliminating TransactionList
     using MedianMap = Treap<DegName,int,Random>;
     
-    void insert(nlohmann::json j);
+    void insert(const nlohmann::json& j);
     double getMedianDegree() const;
 private:
     TransactionList transactions;
     DegreeMap degMap;
     MedianMap medMap;
+    void keyReplace(DegName oldDeg, DegName newDeg);
 };
