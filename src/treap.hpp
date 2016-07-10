@@ -174,8 +174,14 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::remove(const Key& k)
 {
     // get the right tree
     auto right_tree = split(k);
+    // find immediate predecessor
+    node *prev = root, *curr = root;
+    while (curr) { // keep going right
+        prev = curr;
+        curr = curr->right;
+    }
     // toss the actual element by splitting. The unused return value will call the destructor
-    // split(index-1); // find immediate predecessor
+    split(prev->key);
     // merge with the remainder
     merge(right_tree);
     return *this;
