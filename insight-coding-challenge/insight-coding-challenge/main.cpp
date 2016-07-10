@@ -7,9 +7,24 @@
 //
 
 #include <iostream>
+#include <cstdlib>
+#include "treap.hpp"
+
+class Random {
+    int val;
+public:
+    Random() : val(std::rand()) {}
+    bool operator<(Random rhs) { return val < rhs.val;}
+};
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    std::cout << "Hello, World!\n";
+    Treap<int,int,Random> t;
+    
+    for (int i=1;i <= 20; i++) {
+        t.insert(i,2*i);
+    }
+    
+    std::cout << t;
     return 0;
 }

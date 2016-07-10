@@ -33,7 +33,7 @@ struct TreapNode {
     // extra size field for maintaining order statistics
     int size;
 
-    TreapNode(const Key& k, const Value& v, const Priority &p, TreapNode<Key,Value,Priority>* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
+    TreapNode(const Key& k, const Value& v, Priority p, TreapNode<Key,Value,Priority>* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
     : Key(k), val(v), left(l), right(r), size(1), priority(p)
     {}
 };
@@ -76,8 +76,8 @@ public:
     Treap(Treap<Key, Value, Priority>&& other);
     Treap<Key, Value, Priority>& operator=(Treap<Key, Value, Priority>&& other);
 
-
-    Treap<Key, Value, Priority> &insert(const Key& k, const Value & data);
+    // allow default construction of the priority
+    Treap<Key, Value, Priority> &insert(const Key& k, const Value & data, Priority p=Priority());
     Treap<Key, Value, Priority> &remove(const Key& k);
     Treap<Key, Value, Priority> &merge(Treap<Key, Value, Priority> &rhs);
     Treap<Key, Value, Priority> split(const Key &);
@@ -153,10 +153,10 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::operator=(Treap<Key, V
 }*/
 
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, const Value &data)
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, const Value &data, Priority p= Priority())
 {
     // a one-element treap
-    Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(k, data)));
+    Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(k, data,p)));
 
     // split the tree at index
     auto right_tree = split(k);
