@@ -34,7 +34,7 @@ struct TreapNode {
     int size;
 
     TreapNode(const Key& k, const Value& v, Priority p, TreapNode<Key,Value,Priority>* l=nullptr, TreapNode<Key,Value,Priority>*r = nullptr)
-    : Key(k), val(v), left(l), right(r), size(1), priority(p)
+    : key(k), val(v), left(l), right(r), size(1), priority(p)
     {}
 };
 
@@ -56,6 +56,7 @@ class Treap {
 
     // order statistics
     node* getNode(int index) const; // basic iterator function; we may extend this but for now, privatize
+    node* predecessor(const Key& k) const; // again, we may extend this for better functionality, but for now, privatize
 public:
     Treap() : root(nullptr) {}
 
@@ -153,7 +154,7 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::operator=(Treap<Key, V
 }*/
 
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, const Value &data, Priority p= Priority())
+Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::insert(const Key& k, const Value &data, Priority p)
 {
     // a one-element treap
     Treap<Key, Value, Priority> temp(std::unique_ptr<node>(new node(k, data,p)));
@@ -174,16 +175,17 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::remove(const Key& k)
 {
     // get the right tree
     auto right_tree = split(k);
-    // find immediate predecessor
-    node *prev = root, *curr = root;
-    while (curr) { // keep going right
-        prev = curr;
-        curr = curr->right;
+    // find immediate predecessor, which is second to last in the split tree
+    node *prev = predecessor(k);
+    if (!prev) {
+        // it was the min element in the tree
+        *this = std::move(right_tree);
+    } else {
+        // toss the actual element by splitting. The unused return value will call the destructor
+        split(prev->key);
+        // merge with the remainder
+        merge(right_tree);
     }
-    // toss the actual element by splitting. The unused return value will call the destructor
-    split(prev->key);
-    // merge with the remainder
-    merge(right_tree);
     return *this;
 }
 
@@ -308,12 +310,11 @@ typename Treap<Key, Value, Priority>::node *Treap<Key, Value, Priority>::getNode
     return curr;
 }
 
-//// checked access
-//const int & Treap::at(int index) const
-//{
-//    if (index < 0 || index >= size()) throw out_of_range("Tree out of bounds");
-//    return (*this)[index];
-//}
+template <class Key, class Value, class Priority>
+typename Treap<Key, Value, Priority>::node *Treap<Key, Value, Priority>::predecessor(const Key& k) const
+{
+    return nullptr;
+}
 
 
 template <class Key, class Value, class Priority>

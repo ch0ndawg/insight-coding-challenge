@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     for (int i=1;i <= 20; i++) {
         t.insert(i,2*i);
     }
-    
+    t.remove(10);
     std::cout << t;
     return 0;
 }
