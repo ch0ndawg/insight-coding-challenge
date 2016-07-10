@@ -21,8 +21,9 @@ int main(int argc, const char * argv[]) {
     // insert code here...
     Treap<int,int,Random> t;
     
-    for (int i=1;i <= 20; i++) {
-        t.insert(i,2*i);
+    for (int i=1;i <= 200; i++) {
+        int j=i;
+        t.insert(j,j);
     }
     t.remove(10);
     std::cout << t;

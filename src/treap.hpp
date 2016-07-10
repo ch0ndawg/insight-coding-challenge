@@ -81,7 +81,7 @@ public:
     Treap<Key, Value, Priority> &insert(const Key& k, const Value & data, Priority p=Priority());
     Treap<Key, Value, Priority> &remove(const Key& k);
     Treap<Key, Value, Priority> &merge(Treap<Key, Value, Priority> &rhs);
-    Treap<Key, Value, Priority> split(const Key &);
+    Treap<Key, Value, Priority> split(const Key &, bool inclusive=true);
     Treap<Key, Value, Priority> split(std::unique_ptr<node> &curr);
 
 
@@ -175,17 +175,13 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::remove(const Key& k)
 {
     // get the right tree
     auto right_tree = split(k);
-    // find immediate predecessor, which is second to last in the split tree
-    node *prev = predecessor(k);
-    if (!prev) {
-        // it was the min element in the tree
-        *this = std::move(right_tree);
-    } else {
-        // toss the actual element by splitting. The unused return value will call the destructor
-        split(prev->key);
-        // merge with the remainder
-        merge(right_tree);
-    }
+ 
+    // toss the actual element by splitting. The unused return value will call the destructor
+    // the only time we use non-inclusive splitting
+    split(k, /* inclusive */ false);
+    // merge with the remainder
+    merge(right_tree);
+    
     return *this;
 }
 
@@ -227,18 +223,18 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value
 }
 
 template<class Key, class Value, class Priority>
-Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index)
+Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index, bool inclusive)
 {
     Treap res;
     if (!empty()) {
-        
-        if (root->key <= index) {
+        bool rootIsLess = inclusive? (root->key <= index) : (root->key < index);
+        if (rootIsLess) {
             // cut off the right subtree
             Treap temp(std::move(root->right));
 
             // recursively split the right subtree,
             // store *its* right split in res and temp becomes *its* left split
-            res = temp.split(index);
+            res = temp.split(index,inclusive);
 
             // make the temp's left split as the right subree part of this left split
             root->right = std::move(temp.root);
@@ -249,7 +245,7 @@ Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index)
             Treap temp(std::move(root->left));
 
             // split the left subtree, store *its* right split in res and temp becomes *its* left split
-            res = temp.split(index);
+            res = temp.split(index,inclusive);
             // make this result the left subtree
             root->left = std::move(res.root);
 
