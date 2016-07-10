@@ -9,48 +9,27 @@
 #include <iostream>
 #include <cstdlib>
 #include <string>
+#include <fstream>
 #include "treap.hpp"
+#include "median_degree.hpp"
 
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    Treap<int,int,Random> t;
     
-    for (int i=1;i <= 20; i++) {
-        int j=std::rand();
-        t.insert(j,j);
+    MedianDegreeStruct m;
+    // argv[1] will be the input file
+    // argv[2] will be the output file
+    // if none provided, output file will be to stdout
+    
+    std::fstream infile(argv[1],std::fstream::in);
+    std::fstream outfile0(argv[2],std::fstream::out | std::fstream::app);
+    
+    std::ostream& outfile = outfile0? outfile0 : std::cout; // to stdout
+    outfile.width(10);
+    outfile.precision(2);
+    nlohmann::json j;
+    while (infile >> j) {
+        m.insert(j);
+        outfile << m.getMedianDegree() << '\n'; // use NaN when empty
     }
-    
-    std::cout << t << std::endl;
-    std::cout << t.orderStatistic(0).second << ' ' << t.orderStatistic(10).second << std::endl;
-    
-    Treap<std::string, int, Random> tree2;
-    
-    for (int i=0; i < 3; i++) {
-        std::string s;
-        int j;
-        std::cout << "Enter name: ";
-        getline(std::cin, s);
-        std::cout << "Enter number of points: ";
-        std::cin >> j;
-        std::cin.ignore(); // discard the newline
-        tree2.insert(s,j);
-    }
-    
-    std::string s2;
-    std::cout << "What would you like to delete? ";
-    getline(std::cin,s2);
-    
-    tree2.remove(s2);
-    
-    for (int i=0; i< tree2.size(); i++) {
-        auto curr = tree2.orderStatistic(i);
-        std::cout << curr.first << ": " << curr.second << std::endl;
-    }
-    std::pair<int, std::string> k1 = std::make_pair(3, "A");
-    std::pair<int, std::string> k2 = std::make_pair(3, "B");
-    
-    if (k1 < k2) std::cout << "A is less";
-    else std::cout << "B is less";
-    return 0;
 }
