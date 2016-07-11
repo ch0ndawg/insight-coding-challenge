@@ -6,6 +6,7 @@
 #include <string>
 #include <chrono>
 #include <utility>
+#include <time.h>
 #include "json.hpp"
 #include "treap.hpp"
 
@@ -31,11 +32,11 @@ struct JsonDateCompare {
 class MedianDegreeStruct {
 public:
     // Will branch to make a version that uses dates as priorities, eliminating this
-    using TransactionList = std::multiset<nlohmann::json,JsonDateCompare>;
+    using Transaction = std::pair<time_t,std::pair<std::string,std::string>>;
+    using TransactionList = std::set<Transaction>;
+    using EdgeMap = std::unordered_map<std::pair<std::string,std::string>,time_t>;
     using DegreeMap = std::unordered_map<std::string,int>;
     // actually, the values are not used. Some tweaking, perhaps, for a "Set Treap"
-    // Treap by the strict definition: using a randomly generated priority
-    // Will branch to make a version that uses dates as priorities, eliminating TransactionList
     using MedianMap = Treap<DegName,int,Random>;
     
     void insert(const nlohmann::json& j);
