@@ -57,7 +57,10 @@ public:
     void insert(const nlohmann::json& j);
     double getMedianDegree() const;
 private:
+    // could make this public, if, say, we start to synchronize this data structure with actual
+    // ticking clocks, with a live stream
     void evictOldTransactions(const Transaction &t);
+    
     TransactionList transactions;
     EdgeMap graph;
     DegreeMap degMap;

@@ -23,7 +23,7 @@ int main(int argc, const char * argv[]) {
     // if none provided, output file will be to stdout
     
     
-    // set up file streams
+    // set up file streams; command line arguments give it
     std::fstream infile0;
     if (argc > 0) infile0.open(argv[1],std::fstream::in);
     std::fstream outfile0;
@@ -44,7 +44,8 @@ int main(int argc, const char * argv[]) {
         
         // process the string as a single line
         std::stringstream ss(s);
-        // deserialize
+        
+        // deserialize the JSON object
         ss >> j;
         try {
             m.insert(j);
