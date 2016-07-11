@@ -28,13 +28,13 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
     std::string target = j["target"];
     
     // Canonization procedure: to assist in non-directedness of the graph, always make
-    //   the lexicographically first name the "actor"
+    //   the lexicographically first name the "actor", i.e., whether the actor is Bob or Alice.
+    //   and the target is Alice or Bob, the pair is always going to be (Alice,Bob).
     
     if (actor > target) std::swap(actor,target);
     
     Transaction t = std::make_pair(transactionTime, std::make_pair(actor,target));
     
-    // Evict old transactions
     evictOldTransactions(t);
     
     // check to see if the edge is already in the graph
@@ -89,10 +89,10 @@ void MedianDegreeStruct::evictOldTransactions(const Transaction &t)
             
             // insert new values into the median tree [disallow zero]
             
-            if (da-1>0) medMap.insert(std::make_pair(da-1,actor),0);
+            if (da-1>0) medMap.insert(std::make_pair(da-1,actor), /*unused*/ 0);
             else degMap.erase(actor); // remove it from the degree map entirely
                     
-            if (dt-1>0) medMap.insert(std::make_pair(dt-1,target),0);
+            if (dt-1>0) medMap.insert(std::make_pair(dt-1,target), /*unused*/ 0);
             else degMap.erase(target); // remove it from the degree map entirely
         }
         // actually remove all the earliest entries (earliest)
