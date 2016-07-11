@@ -6,9 +6,18 @@ BINDIR = bin
 CPP_FILES := $(wildcard ${SRCDIR}/*.cpp)
 OBJS := $(addprefix build/,$(notdir $(CPP_FILES:.cpp=.o)))
 
-program: ${OBJS}
+program: ${OBJS} ${BINDIR}
 	${CPP} ${OBJS} -o ${BINDIR}/rolling_median
 
+${BINDIR}:
+	mkdir bin
 
-${BUILDDIR}/%.o: ${SRCDIR}/%.cpp
+${BUILDDIR}:
+	mkdir build
+
+${BUILDDIR}/%.o: ${SRCDIR}/%.cpp ${BUILDDIR}
 	${CPP} ${CCFLAGS} -c -o $@ $<
+
+clean:
+	rm -rf ${BUILDDIR}
+	rm -rf ${BINDIR}
