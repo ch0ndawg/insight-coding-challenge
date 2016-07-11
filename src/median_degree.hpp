@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <unordered_map>
-#include <queue>
+#include <set>
 #include <string>
 #include <chrono>
 #include <utility>
@@ -22,14 +22,14 @@ public:
 using DegName = std::pair<int, std::string>;
 struct JsonDateCompare {
     bool operator()(const nlohmann::json &lhs, const nlohmann::json& rhs) {
-        return lhs["Date"] < rhs["Date"];
+        return lhs["created_time"] < rhs["created_time"];
     }
 };
 
 class MedianDegreeStruct {
 public:
     // Will branch to make a version that uses dates as priorities, eliminating this
-    using TransactionList = std::priority_queue<nlohmann::json, std::vector<nlohmann::json>, JsonDateCompare>;
+    using TransactionList = std::multiset<nlohmann::json,JsonDateCompare>;
     using DegreeMap = std::unordered_map<std::string,int>;
     // actually, the values are not used. Some tweaking, perhaps, for a "Set Treap"
     // Treap by the strict definition: using a randomly generated priority
