@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8C714B9C1D317EFB00EC5851 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C714B9B1D317EFB00EC5851 /* main.cpp */; };
 		8C7F2E6B1D31814B00FE4CD6 /* median_degree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C7F2E671D31814B00FE4CD6 /* median_degree.cpp */; };
 		8C7F2E6C1D31814B00FE4CD6 /* treap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C7F2E691D31814B00FE4CD6 /* treap.cpp */; };
 		8C7F2E6D1D31814B00FE4CD6 /* treap.hpp in Sources */ = {isa = PBXBuildFile; fileRef = 8C7F2E6A1D31814B00FE4CD6 /* treap.hpp */; };
+		8CC3639F1D335D8C00D2D37A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CC3639E1D335D8C00D2D37A /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,12 +27,12 @@
 
 /* Begin PBXFileReference section */
 		8C714B981D317EFB00EC5851 /* insight-coding-challenge */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "insight-coding-challenge"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8C714B9B1D317EFB00EC5851 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		8C7F2E661D31814B00FE4CD6 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = json.hpp; path = ../../src/json.hpp; sourceTree = "<group>"; };
 		8C7F2E671D31814B00FE4CD6 /* median_degree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = median_degree.cpp; path = ../../src/median_degree.cpp; sourceTree = "<group>"; };
 		8C7F2E681D31814B00FE4CD6 /* median_degree.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = median_degree.hpp; path = ../../src/median_degree.hpp; sourceTree = "<group>"; };
 		8C7F2E691D31814B00FE4CD6 /* treap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = treap.cpp; path = ../../src/treap.cpp; sourceTree = "<group>"; };
 		8C7F2E6A1D31814B00FE4CD6 /* treap.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = treap.hpp; path = ../../src/treap.hpp; sourceTree = "<group>"; };
+		8CC3639E1D335D8C00D2D37A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../../src/main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +70,7 @@
 				8C7F2E681D31814B00FE4CD6 /* median_degree.hpp */,
 				8C7F2E691D31814B00FE4CD6 /* treap.cpp */,
 				8C7F2E6A1D31814B00FE4CD6 /* treap.hpp */,
-				8C714B9B1D317EFB00EC5851 /* main.cpp */,
+				8CC3639E1D335D8C00D2D37A /* main.cpp */,
 			);
 			path = "insight-coding-challenge";
 			sourceTree = "<group>";
@@ -131,9 +131,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C714B9C1D317EFB00EC5851 /* main.cpp in Sources */,
 				8C7F2E6B1D31814B00FE4CD6 /* median_degree.cpp in Sources */,
 				8C7F2E6C1D31814B00FE4CD6 /* treap.cpp in Sources */,
+				8CC3639F1D335D8C00D2D37A /* main.cpp in Sources */,
 				8C7F2E6D1D31814B00FE4CD6 /* treap.hpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
