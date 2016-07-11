@@ -24,22 +24,25 @@ double dateDiff(const nlohmann::json& lhs, const nlohmann::json& rhs)
 
 void MedianDegreeStruct::insert(const nlohmann::json &j)
 {
-    auto latest = transactions.rend();
-    if (dateDiff(j,*latest) >= 60.0) return; // reject it
-    for (auto earliest = transactions.begin(); dateDiff(j,*earliest) >= 60.0; transactions.erase(earliest)) {
-        std::string actor = (*earliest)["actor"];
-        std::string target = (*earliest)["target"];
-        
-        int da = degMap[actor]--;
-        int dt = degMap[target]--;
-        
-        // remove them from the median tree
-        medMap.remove(std::make_pair(da,actor));
-        medMap.remove(std::make_pair(dt,target));
-        
-        // insert new values into the median tree
-        medMap.insert(std::make_pair(da-1,actor),0);
-        medMap.insert(std::make_pair(dt-1,target),0);
+    if (!transactions.empty()) {
+        auto latest = transactions.rend();
+        if (dateDiff(j,*latest) >= 60.0) return; // reject it
+        for (auto earliest = transactions.begin(); dateDiff(j,*earliest) >= 60.0; transactions.erase(earliest)) {
+            std::string actor = (*earliest)["actor"];
+            std::string target = (*earliest)["target"];
+            
+            int da = degMap[actor]--;
+            int dt = degMap[target]--;
+            
+            // remove them from the median tree
+            medMap.remove(std::make_pair(da,actor));
+            medMap.remove(std::make_pair(dt,target));
+            
+            // insert new values into the median tree [disallow zero]
+
+            if (da-1>0) medMap.insert(std::make_pair(da-1,actor),0);
+            if (dt-1>0) medMap.insert(std::make_pair(dt-1,target),0);
+        }
     }
     std::string actor = j["actor"];
     std::string target = j["target"];

@@ -61,6 +61,16 @@
             ReferencedContainer = "container:insight-coding-challenge.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "/Users/ch0ni/Documents/insight-data-eng-coding-challenge-xcode/data-gen/venmo-trans.txt"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "/Users/ch0ni/Desktop/sample-venmo-trans.txt"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

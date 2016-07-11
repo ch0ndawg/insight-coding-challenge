@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "treap.hpp"
 #include "median_degree.hpp"
 
@@ -21,15 +22,24 @@ int main(int argc, const char * argv[]) {
     // argv[2] will be the output file
     // if none provided, output file will be to stdout
     
-    std::fstream infile(argv[1],std::fstream::in);
-    std::fstream outfile0(argv[2],std::fstream::out | std::fstream::app);
     
+    std::fstream infile0;
+    if (argc > 0) infile0.open(argv[1],std::fstream::in);
+    std::fstream outfile0;
+    if (argc > 1) outfile0.open(argv[2],std::fstream::out | std::fstream::app);
+    
+    std::istream& infile = infile0? infile0 : std::cin;
     std::ostream& outfile = outfile0? outfile0 : std::cout; // to stdout
-    outfile.width(10);
-    outfile.precision(2);
-    nlohmann::json j;
-    while (infile >> j) {
+    
+    int i=0;
+    while (!infile.eof()) {
+        nlohmann::json j;
+        std::string s;
+        std::getline(infile,s);
+        std::stringstream ss(s);
+        ss >> j;
         m.insert(j);
-        outfile << m.getMedianDegree() << '\n'; // use NaN when empty
+        outfile << i << ' ' << std::fixed << std::setprecision(2) << m.getMedianDegree() << std::endl; // use NaN when empty
+        i++;
     }
 }
