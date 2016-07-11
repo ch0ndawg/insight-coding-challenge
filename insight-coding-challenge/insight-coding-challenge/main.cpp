@@ -31,7 +31,6 @@ int main(int argc, const char * argv[]) {
     std::istream& infile = infile0? infile0 : std::cin;
     std::ostream& outfile = outfile0? outfile0 : std::cout; // to stdout
     
-    int i=0;
     while (!infile.eof()) {
         nlohmann::json j;
         std::string s;
@@ -43,7 +42,6 @@ int main(int argc, const char * argv[]) {
         std::stringstream ss(s);
         ss >> j;
         m.insert(j);
-        outfile << i << ' ' << std::fixed << std::setprecision(2) << m.getMedianDegree() << std::endl; // use NaN when empty
-        i++;
+        outfile << std::fixed << std::setprecision(2) << m.getMedianDegree() << '\n'; // use NaN when empty
     }
 }
