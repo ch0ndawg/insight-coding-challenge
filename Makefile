@@ -1,5 +1,5 @@
 CPP = g++
-CCFLAGS = -std=c++14
+CCFLAGS = -std=c++14 -O2
 SRCDIR = src
 BUILDDIR = build
 BINDIR = bin

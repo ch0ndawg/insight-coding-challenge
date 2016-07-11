@@ -16,6 +16,8 @@ public:
     bool operator<(Random rhs) { return val < rhs.val;}
 };
 
+class EmptyActorException {};
+
 // this will be the key for the median updates tree. It is ordered lexicographically.
 // this will be converted to a native format as an optimization,
 // but for now, we keep it here for proof of concept
@@ -42,5 +44,5 @@ private:
     TransactionList transactions;
     DegreeMap degMap;
     MedianMap medMap;
-    void keyReplace(DegName oldDeg, DegName newDeg);
+    
 };

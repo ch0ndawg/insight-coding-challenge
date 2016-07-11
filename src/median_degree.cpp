@@ -22,6 +22,9 @@ double dateDiff(const nlohmann::json& lhs, const nlohmann::json& rhs)
 
 void MedianDegreeStruct::insert(const nlohmann::json &j)
 {
+    std::string actor = j["actor"];
+    if (actor.empty()) throw EmptyActorException();
+    
     if (!transactions.empty()) {
         // latest element is at the very end
         auto latest = transactions.rbegin();
@@ -45,7 +48,6 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
         }
     }
     transactions.insert(j);
-    std::string actor = j["actor"];
     std::string target = j["target"];
     
     int da = degMap[actor]++;

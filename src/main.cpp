@@ -41,7 +41,11 @@ int main(int argc, const char * argv[]) {
         // process the string as a single line
         std::stringstream ss(s);
         ss >> j;
-        m.insert(j);
+        try {
+            m.insert(j);
+        } catch(EmptyActorException&) {
+            std::cerr << "Empty actor encountered; skipping!";
+        }
         outfile << std::fixed << std::setprecision(2) << m.getMedianDegree() << '\n'; // use NaN when empty
     }
 }
