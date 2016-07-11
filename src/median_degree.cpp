@@ -1,7 +1,7 @@
 #include "median_degree.hpp"
 #include "treap.hpp"
 #include <chrono>
-#include <ctime>
+#include <time.h>
 #include <iomanip>
 #include <sstream>
 
@@ -10,24 +10,24 @@ double dateDiff(const nlohmann::json& lhs, const nlohmann::json& rhs)
     const char *fmt = "%Y-%m-%dT%H:%M:%SZ";
     std::string s1 = lhs["created_time"];
     std::string s2 = rhs["created_time"];
-    std::istringstream ss1(s1);
-    std::istringstream ss2(s2);
-    std::tm t1, t2;
+    tm t1, t2;
     
-    ss1 >> std::get_time(&t1, fmt);
-    ss2 >> std::get_time(&t2, fmt);
+    strptime(s1.c_str(), fmt, &t1);
+    strptime(s2.c_str(), fmt, &t2);
     
-    std::time_t rt1 = std::mktime(&t1);
-    std::time_t rt2 = std::mktime(&t2);
+    time_t rt1 = timegm(&t1);
+    time_t rt2 = timegm(&t2);
     return difftime(rt1,rt2);
 }
 
 void MedianDegreeStruct::insert(const nlohmann::json &j)
 {
     if (!transactions.empty()) {
-        auto latest = transactions.rend();
+        // latest element is at the very end
+        auto latest = transactions.rbegin();
         if (dateDiff(j,*latest) >= 60.0) return; // reject it
-        for (auto earliest = transactions.begin(); dateDiff(j,*earliest) >= 60.0; transactions.erase(earliest)) {
+        for (auto earliest = transactions.begin(); dateDiff(j,*earliest) >= 60.0; transactions.erase(earliest),
+             earliest = transactions.begin()) {
             std::string actor = (*earliest)["actor"];
             std::string target = (*earliest)["target"];
             
@@ -44,6 +44,7 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
             if (dt-1>0) medMap.insert(std::make_pair(dt-1,target),0);
         }
     }
+    transactions.insert(j);
     std::string actor = j["actor"];
     std::string target = j["target"];
     
