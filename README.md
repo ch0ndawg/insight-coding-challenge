@@ -287,7 +287,7 @@ The new median degree, calculated from {1, 1, 1, 1, 1, 1} = 1.00 and our new lis
 	1.50
 	1.00
 
-The output should be a file in the `venmo_output` directory named `output.txt` that contains the rolling median for each transaction in the file (e.g. if there are three input transactions, then there should be 3 medians), following the format above. The precision of the average should be two digits after the decimal place with truncation.
+The output should be a file in the `venmo_output` directory named `output.txt` that contains the rolling median for each transaction in the file (e.g. if there are three input transactions, then there should be 3 medians), following the format above. The precision of the median should be two digits after the decimal place with truncation.
 
 ##Collecting payments from Venmo API
 
@@ -376,6 +376,12 @@ You should submit the URL for the top-level root of your repository.  For exampl
 * *Do I need a private Github repo?*  
 No, you may use a public repo, there is no need to purchase a private repo.  You may also submit a link to a Bitbucket repo if you prefer.
 
+* *How should I account for transactions that are missing an "actor" field?*  
+These errors in the input should be ignored by your program with correct exception handling.  They should not affect your graph, and should not result in a new line in the output file.  For simplicity, we have removed these entries from the sample file we have provided.
+
+* *Are transactions edges directed?  If person A sends a payment to person B, is that different than if person B sends a payment to person A?*  
+No, for simplicity the edges in the graph should be undirected.  Nodes are connected with an edge regardless of the direction of payment.  
+
 * *Do you have any larger sample inputs?*  
 Yes, we have provided a sample of approximately 1,800 transactions in the `data-gen` directory of this repo.
 
@@ -403,11 +409,11 @@ No, your solution doesn't have to re-process `venmo-trans.txt`.  Instead, it sho
 * *What should the format of the output be?*  
 In order to be tested correctly, you must use the format described above.  You can ensure that you have the correct format by using the testing suite we've included.  If you are still unable to get the correct format from the messages in the suite, please email us at cc@insightdataengineering.com.
 
-* *What should the precision of the average be?*  
-The precision of the average should be truncated to two digits after the decimal place (e.g. 5/3 should be outputted as 1.66).  
+* *What should the precision of the median be?*  
+The precision of the median should be truncated to two digits after the decimal place (e.g. 5/3 should be outputted as 1.66).  
 
 * *Do I need to update the median when the next payment in the file falls outside the 60-second window?*  
-Yes, you're median should be updated each time a new payment is processed, regardless of if it falls outside the window.  Thus, if there are 500 lines in the input file then there should be 500 lines of median degree in `output.txt`. 
+Yes, you're median should be updated each time a new payment is processed, regardless of if it falls outside the window.  Thus, if there are 500 lines in the input file, and 5 are incorrectly formatted (perhaps missing the actor field), then there should be 495 lines of median degree in `output.txt`. 
 
 * *Should the 60-second window be inclusive or exclusive?  In other words, for a 60-second window that ends with `01:02:30`, does it begin `01:01:30` or `01:01:31`?*  
 The 60-second window should be exclusive.  In other words, a correct window of 60 seconds is from `01:01:31` to `01:02:30`.  Given that this nuance may be confusing, our testing suite is tolerant to exclusive or inclusive windows - both windows will be considered valid.  
