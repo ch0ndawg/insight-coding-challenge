@@ -26,7 +26,7 @@ int main(int argc, const char * argv[]) {
     std::fstream infile0;
     if (argc > 0) infile0.open(argv[1],std::fstream::in);
     std::fstream outfile0;
-    if (argc > 1) outfile0.open(argv[2],std::fstream::out | std::fstream::app);
+    if (argc > 1) outfile0.open(argv[2],std::fstream::out);
     
     std::istream& infile = infile0? infile0 : std::cin;
     std::ostream& outfile = outfile0? outfile0 : std::cout; // to stdout
