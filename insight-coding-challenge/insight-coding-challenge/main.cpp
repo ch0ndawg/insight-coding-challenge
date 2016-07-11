@@ -36,6 +36,10 @@ int main(int argc, const char * argv[]) {
         nlohmann::json j;
         std::string s;
         std::getline(infile,s);
+        // if it is a blank line, keep going
+        if (s.empty()) continue;
+        
+        // process the string as a single line
         std::stringstream ss(s);
         ss >> j;
         m.insert(j);
