@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include <set>
 #include <string>
 #include <chrono>
@@ -35,10 +36,10 @@ public:
     //     earliest and latest transactions.
     using TransactionList = std::set<Transaction>;
     
-    // This is the actual graph; it is stored as hash map of edges, rather than the traditional
+    // This is the actual graph; it is stored as map of edges, rather than the traditional
     //   vertices with adjacency list, because for our purposes, we need to be able to find
     //   specific edges quickly. A more traditional structure favors things like DFS and BFS.
-    using EdgeMap = std::unordered_map<std::pair<std::string,std::string>,time_t>;
+    using EdgeMap = std::map<std::pair<std::string,std::string>,time_t>;
     
     
     // MEDIAN DATA
@@ -56,6 +57,7 @@ public:
     void insert(const nlohmann::json& j);
     double getMedianDegree() const;
 private:
+    void evictOldTransactions(const Transaction &t);
     TransactionList transactions;
     EdgeMap graph;
     DegreeMap degMap;
