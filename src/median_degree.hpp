@@ -1,12 +1,10 @@
-// MEDIAN DEGREE project
-
 #include <iostream>
 #include <unordered_map>
 #include <set>
 #include <string>
 #include <chrono>
 #include <utility>
-#include <time.h>
+#include <time.h> // POSIX version required
 #include "json.hpp"
 #include "treap.hpp"
 
@@ -19,31 +17,47 @@ public:
 
 class EmptyActorException {};
 
-// this will be the key for the median updates tree. It is ordered lexicographically.
-// this will be converted to a native format as an optimization,
-// but for now, we keep it here for proof of concept
-using DegName = std::pair<int, std::string>;
-struct JsonDateCompare {
-    bool operator()(const nlohmann::json &lhs, const nlohmann::json& rhs) {
-        return lhs["created_time"] < rhs["created_time"];
-    }
-};
 
 class MedianDegreeStruct {
 public:
-    // Will branch to make a version that uses dates as priorities, eliminating this
+    // GRAPH DATA
+    
+    // A transaction is basically our native JSON format.
+    //  The second pair will always be in increasing lexicographic order,
+    //    since we do not distinguish direction of payments.
+    //  The first item is the date, which is converted to system time from the JSON.
+    //    REQUIRES: POSIX standard time.h; the ISO standard version is problematic
     using Transaction = std::pair<time_t,std::pair<std::string,std::string>>;
+    
+    // TransactionList is ordered first by time, then transaction participants
+    //   The reason why we need this ordering is for efficient min and max;
+    //     we want this in order to be able to maintain the window between
+    //     earliest and latest transactions.
     using TransactionList = std::set<Transaction>;
+    
+    // This is the actual graph; it is stored as hash map of edges, rather than the traditional
+    //   vertices with adjacency list, because for our purposes, we need to be able to find
+    //   specific edges quickly. A more traditional structure favors things like DFS and BFS.
     using EdgeMap = std::unordered_map<std::pair<std::string,std::string>,time_t>;
+    
+    
+    // MEDIAN DATA
+    
+    // this will be the key for the median updates tree. It is ordered lexicographically.
+    using DegName = std::pair<int, std::string>;
+    // this is required for us to store and look up degrees. In essence,
+    //   it's how we store the vertices of the graph
     using DegreeMap = std::unordered_map<std::string,int>;
-    // actually, the values are not used. Some tweaking, perhaps, for a "Set Treap"
+    // The actual median updates tree. It is implemented as an augmented treap, using
+    //   dynamic order statistics. It is cleaner than augmenting a traditional red-black tree
     using MedianMap = Treap<DegName,int,Random>;
     
+    // actual insertion function
     void insert(const nlohmann::json& j);
     double getMedianDegree() const;
 private:
     TransactionList transactions;
+    EdgeMap graph;
     DegreeMap degMap;
     MedianMap medMap;
-    
 };
