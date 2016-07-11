@@ -30,7 +30,8 @@ function find_file_or_dir_in_project {
 # check project directory structure
 function check_project_struct {
   find_file_or_dir_in_project ${PROJECT_PATH} run.sh
-  find_file_or_dir_in_project ${PROJECT_PATH} bin
+  find_file_or_dir_in_project ${PROJECT_PATH} Makefile
+  find_file_or_dir_in_project ${PROJECT_PATH} src
   find_file_or_dir_in_project ${PROJECT_PATH} venmo_input
   find_file_or_dir_in_project ${PROJECT_PATH} venmo_output
 }
@@ -44,8 +45,9 @@ function setup_testing_input_output {
 
   mkdir -p ${TEST_OUTPUT_PATH}
 
-  cp -r ${PROJECT_PATH}/bin ${TEST_OUTPUT_PATH}
+  cp -r ${PROJECT_PATH}/src ${TEST_OUTPUT_PATH}
   cp -r ${PROJECT_PATH}/run.sh ${TEST_OUTPUT_PATH}
+  cp -r ${PROJECT_PATH}/Makefile ${TEST_OUTPUT_PATH}
   cp -r ${PROJECT_PATH}/venmo_input ${TEST_OUTPUT_PATH}
   cp -r ${PROJECT_PATH}/venmo_output ${TEST_OUTPUT_PATH}
 
