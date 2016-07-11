@@ -35,7 +35,12 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
     
     Transaction t = std::make_pair(transactionTime, std::make_pair(actor,target));
     
-    evictOldTransactions(t);
+    if (!transactions.empty()) { // latest element is at the very end
+        auto latest = transactions.rbegin();
+        if (dateDiff(*latest,t) >= 60.0) return; // reject it
+        evictOldTransactions(t);
+    }
+        
     
     // check to see if the edge is already in the graph
     auto graphEntry = graph.find(t.second);
@@ -65,39 +70,33 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
 // evict old transactions
 void MedianDegreeStruct::evictOldTransactions(const Transaction &t)
 {
-    if (!transactions.empty()) {
-        // latest element is at the very end
-        auto latest = transactions.rbegin();
-        if (dateDiff(t,*latest) >= 60.0) return; // reject it
+    // remove everything outside the window
+    auto earliest = transactions.begin();
+    for ( ; earliest != transactions.end() && dateDiff(t,*earliest) >= 60.0; earliest++) {
+        std::string actor = earliest->second.first;
+        std::string target = earliest->second.second;
         
-        // remove everything outside the window
-        auto earliest = transactions.begin();
-        for ( ; earliest != transactions.end() && dateDiff(t,*earliest) >= 60.0; earliest++) {
-            std::string actor = earliest->second.first;
-            std::string target = earliest->second.second;
-            
-            // remove it from the graph
-            graph.erase(earliest->second);
-            
-            // decrement their degrees
-            int da = degMap[actor]--;
-            int dt = degMap[target]--;
-            
-            // remove them from the median tree
-            medMap.remove(std::make_pair(da,actor));
-            medMap.remove(std::make_pair(dt,target));
-            
-            // insert new values into the median tree [disallow zero]
-            
-            if (da-1>0) medMap.insert(std::make_pair(da-1,actor), /*unused*/ 0);
-            else degMap.erase(actor); // remove it from the degree map entirely
-                    
-            if (dt-1>0) medMap.insert(std::make_pair(dt-1,target), /*unused*/ 0);
-            else degMap.erase(target); // remove it from the degree map entirely
-        }
-        // actually remove all the earliest entries (earliest)
-        transactions.erase(transactions.begin(),earliest);
+        // remove it from the graph
+        graph.erase(earliest->second);
+        
+        // decrement their degrees
+        int da = degMap[actor]--;
+        int dt = degMap[target]--;
+        
+        // remove them from the median tree
+        medMap.remove(std::make_pair(da,actor));
+        medMap.remove(std::make_pair(dt,target));
+        
+        // insert new values into the median tree [disallow zero]
+        
+        if (da-1>0) medMap.insert(std::make_pair(da-1,actor), /*unused*/ 0);
+        else degMap.erase(actor); // remove it from the degree map entirely
+                
+        if (dt-1>0) medMap.insert(std::make_pair(dt-1,target), /*unused*/ 0);
+        else degMap.erase(target); // remove it from the degree map entirely
     }
+    // actually remove all the earliest entries (earliest)
+    transactions.erase(transactions.begin(),earliest);
 }
 
 
