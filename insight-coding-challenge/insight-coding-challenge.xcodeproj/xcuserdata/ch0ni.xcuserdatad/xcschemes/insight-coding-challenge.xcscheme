@@ -67,7 +67,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/Users/ch0ni/Desktop/sample-venmo-trans.txt"
+            argument = "/Users/ch0ni/Documents/insight-data-eng-coding-challenge/venmo_input/venmo-trans.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -23,16 +23,20 @@ int main(int argc, const char * argv[]) {
     // if none provided, output file will be to stdout
     
     
+    // set up file streams
     std::fstream infile0;
     if (argc > 0) infile0.open(argv[1],std::fstream::in);
     std::fstream outfile0;
     if (argc > 1) outfile0.open(argv[2],std::fstream::out);
     
-    std::istream& infile = infile0? infile0 : std::cin;
-    std::ostream& outfile = outfile0? outfile0 : std::cout; // to stdout
+    std::istream& infile = infile0? infile0 : std::cin; // read from stdin if file is invalid
+    std::ostream& outfile = outfile0? outfile0 : std::cout; // write to stdout if file is invalid
     
     while (!infile.eof()) {
         nlohmann::json j;
+        
+        // get strings from file line-by-line
+        // this JSON reader package insists on deserializing them one at a time
         std::string s;
         std::getline(infile,s);
         // if it is a blank line, keep going
@@ -40,12 +44,13 @@ int main(int argc, const char * argv[]) {
         
         // process the string as a single line
         std::stringstream ss(s);
+        // deserialize
         ss >> j;
         try {
             m.insert(j);
+            outfile << std::fixed << std::setprecision(2) << m.getMedianDegree() << '\n'; // use NaN when empty
         } catch(EmptyActorException&) {
-            std::cerr << "Empty actor encountered; skipping!";
+            std::cerr << "Empty actor encountered; skipping!" << std::endl;
         }
-        outfile << std::fixed << std::setprecision(2) << m.getMedianDegree() << '\n'; // use NaN when empty
     }
 }

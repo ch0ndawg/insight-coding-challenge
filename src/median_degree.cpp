@@ -29,8 +29,10 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
         // latest element is at the very end
         auto latest = transactions.rbegin();
         if (dateDiff(j,*latest) >= 60.0) return; // reject it
-        for (auto earliest = transactions.begin(); dateDiff(j,*earliest) >= 60.0; transactions.erase(earliest),
-             earliest = transactions.begin()) {
+        
+        // remove everything outside the window
+        auto earliest = transactions.begin();
+        for ( ; earliest != transactions.end() && dateDiff(j,*earliest) >= 60.0; earliest++) {
             std::string actor = (*earliest)["actor"];
             std::string target = (*earliest)["target"];
             
@@ -46,6 +48,8 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
             if (da-1>0) medMap.insert(std::make_pair(da-1,actor),0);
             if (dt-1>0) medMap.insert(std::make_pair(dt-1,target),0);
         }
+        // actually remove all the earliest entries (earliest)
+        transactions.erase(transactions.begin(),earliest);
     }
     transactions.insert(j);
     std::string target = j["target"];
