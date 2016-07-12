@@ -12,7 +12,7 @@ As for other dependencies, it uses Niels Lohmann's [JSON reader](https://github.
 In summary, simply make sure the proper POSIX time functions are available and that one has an ISO C++14 conformant compiler.
 
 ## Installation and Running Instructions
-Running and testing the program conforms to usage notes for testing and running as described in the README for the Insight Coding Challenge; one should either do `./run.sh` at the root of the directory or use the provided script in the testing suite. Note that `run.sh` will compile source, and as such, the testing script `run_tests.sh` will also recompile before each test. That said, compilation takes about 2 seconds (but this is useful to know if anyone is going to be timing from the initial run from start to finish.). Four test cases have been included in the insight_testsuite.
+Running and testing the program conforms to usage notes for testing and running as described in the README for the Insight Coding Challenge; one should either do `./run.sh` at the root of the directory or use the provided script in the testing suite. Note that `run.sh` will compile source, and as such, the testing script `run_tests.sh` will also recompile before each test. That said, compilation takes about 2 seconds (but this is useful to know if anyone is going to be timing from the initial run from start to finish.). Four test cases have been included in the `insight_testsuite` directory.
 
 # Remarks on the Development
 ## General Design Overview
