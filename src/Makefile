@@ -1,4 +1,4 @@
-CPP = g++
+CPP = g++-6
 CCFLAGS = -std=c++14 -O2
 SRCDIR = .
 BUILDDIR = ../build

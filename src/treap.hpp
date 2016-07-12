@@ -94,7 +94,7 @@ public:
     std::pair<Key, Value> orderStatistic(int index) const
     { node *res = getNode(index); return std::make_pair(res->key,res->val); } // array indexing
 
-    Value &operator[](const Key &k) { return const_cast<Value&>(static_cast<const Treap<Key, Value, Priority>&>(*this)[index]); }
+    Value &operator[](const Key &k) { return const_cast<Value&>(static_cast<const Treap<Key, Value, Priority>&>(*this)[k]); }
 
     // int getkey(node* curr) const ; // unnecessary for explicit treaps; however may be useful for computing order statistic
     ~Treap();
