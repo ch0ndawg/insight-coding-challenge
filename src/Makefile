@@ -1,5 +1,6 @@
-CPP = g++-6
-CCFLAGS = -std=c++14 -O2
+# CPP = g++
+# CFLAGS = -std=c++14 -O2
+# OPTS = -O2
 SRCDIR = .
 BUILDDIR = ../build
 BINDIR = ../bin
@@ -16,7 +17,7 @@ ${BUILDDIR}:
 	mkdir ${BUILDDIR}
 
 ${BUILDDIR}/%.o: ${SRCDIR}/%.cpp ${BUILDDIR}
-	${CPP} ${CCFLAGS} -c -o $@ $<
+	${CPP} ${CFLAGS} ${OPTS} -c -o $@ $<
 
 clean:
 	rm -rf ${BUILDDIR}
