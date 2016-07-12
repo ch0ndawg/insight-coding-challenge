@@ -197,7 +197,7 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value
         // right tree has higher priority
         if (root->priority < rhs.root->priority) {
             // cut off the left branch of rhs tree:
-            Treap temp(std::move(rhs.root->left));
+            Treap<Key, Value, Priority> temp(std::move(rhs.root->left));
             // merge with cut left branch; assume all its sizes are correct
             merge(temp);
             // reattach merged tree to left
@@ -210,7 +210,7 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value
         // right tree has lower priority
         else {
             // cut off right branch of this tree
-            Treap temp(std::move(root->right));
+            Treap<Key, Value, Priority> temp(std::move(root->right));
             // merge the cut branch with rhs; assume its sizes are correct
             temp.merge(rhs);
             // reattach merged tree to the right
@@ -225,12 +225,12 @@ Treap<Key, Value, Priority>& Treap<Key, Value, Priority>::merge(Treap<Key, Value
 template<class Key, class Value, class Priority>
 Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index, bool inclusive)
 {
-    Treap res;
+    Treap<Key, Value, Priority> res;
     if (!empty()) {
         bool rootIsLess = inclusive? (root->key <= index) : (root->key < index);
         if (rootIsLess) {
             // cut off the right subtree
-            Treap temp(std::move(root->right));
+            Treap<Key, Value, Priority> temp(std::move(root->right));
 
             // recursively split the right subtree,
             // store *its* right split in res and temp becomes *its* left split
@@ -242,7 +242,7 @@ Treap<Key, Value, Priority> Treap<Key, Value, Priority>::split(const Key& index,
             root->size =sz(root->left)+1+sz(root->right);
         } else {
             // get (and cut off) the left subtree
-            Treap temp(std::move(root->left));
+            Treap<Key, Value, Priority> temp(std::move(root->left));
 
             // split the left subtree, store *its* right split in res and temp becomes *its* left split
             res = temp.split(index,inclusive);
