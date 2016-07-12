@@ -57,7 +57,7 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
         // insert new values into the median tree
         medMap.insert(std::make_pair(da+1,actor),0);
         medMap.insert(std::make_pair(dt+1,target),0);
-    } else { // if so, update the timestamps
+    } else { // if so, merely update the timestamps
         // erase the old time
         transactions.erase(std::make_pair(graphEntry->second,graphEntry->first));
     }
