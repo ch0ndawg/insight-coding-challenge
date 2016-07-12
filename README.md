@@ -7,11 +7,15 @@ This is my submission for the [Insight Data Engineering Coding challenge](https:
 
 The program is written in C++, *almost* conforming to the ISO C++14 standard. The only non-conformant part is that it uses the POSIX version of the time functions (this should be the usual `time.h` on UNIX systems), because the ISO standard versions of the time functions are still broken (at least on my system).
 
+* NOTE: A correction was approved past the submission deadline with permission--my compiler let an error in an unused function, as well as some template deductions, to sneak past. In order to facilitate using different compilers, I have changed the makefile, which requires the following environment variables: `CPP` should be set to the C++ compiler (e.g. `CPP=g++-6`), `CFLAGS` should be set to any important options to specify a standard (e.g. for GCC and clang, `CFLAGS="-std=C++14"`), and finally `OPTS` for other options. I usually specify options for optimization, e.g., `OPTS=-O2`). The command-line syntax is still pretty much based on GCC, so use that (at least verson 5) if possible.
+
 As for other dependencies, it uses Niels Lohmann's [JSON reader](https://github.com/nlohmann/json), but that is already included in the sources as a single header file, `json.hpp`. The treap source `treap.hpp` is also included. It is based on a structure I used for a [HackerRank exercise](https://www.hackerrank.com/challenges/array-and-simple-queries) involving balanced trees.
 
 In summary, simply make sure the proper POSIX time functions are available and that one has an ISO C++14 conformant compiler.
 
 ## Installation and Running Instructions
+First, as mentioned above, one must make sure the compiler environment variables are set: `CPP` should be set to the C++ compiler, `CFLAGS` should be set to any important options needed to specify a standard (e.g. for GCC and clang, `CFLAGS="-std=C++14"`), and finally `OPTS` for other options. I usually specify `-O2` for optimization).
+
 Running and testing the program conforms to usage notes for testing and running as described in the README for the Insight Coding Challenge; one should either do `./run.sh` at the root of the directory or use the provided script in the testing suite. Note that `run.sh` will compile source, and as such, the testing script `run_tests.sh` will also recompile before each test. That said, compilation takes about 2 seconds (but this is useful to know if anyone is going to be timing from the initial run from start to finish.). Four test cases have been included in the `insight_testsuite` directory.
 
 # Remarks on the Development
