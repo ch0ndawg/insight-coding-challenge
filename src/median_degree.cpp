@@ -58,11 +58,11 @@ void MedianDegreeStruct::insert(const nlohmann::json &j)
         medMap.insert(std::make_pair(da+1,actor),0);
         medMap.insert(std::make_pair(dt+1,target),0);
     } else { // if so, update the timestamps
-        graph[t.second] = t.first; // update the time
         // erase the old time
         transactions.erase(std::make_pair(graphEntry->second,graphEntry->first));
     }
     
+    graph[t.second] = t.first; // create a new entry or update time
     // insert the new entry into the transactions
     transactions.insert(t);
 }
