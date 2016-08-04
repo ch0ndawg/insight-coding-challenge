@@ -9,9 +9,9 @@ The program is written in C++, *almost* conforming to the ISO C++14 standard. Th
 
 * NOTE: A correction was approved past the submission deadline with permission--my compiler let an error in an unused function, as well as some template deductions, to sneak past. In order to facilitate using different compilers, I have changed the makefile, which requires the following environment variables: `CPP` should be set to the C++ compiler (e.g. `CPP=g++-6`), `CFLAGS` should be set to any important options to specify a standard (e.g. for GCC and clang, `CFLAGS="-std=C++14"`), and finally `OPTS` for other options. I usually specify options for optimization, e.g., `OPTS=-O2`). The command-line syntax is still pretty much based on GCC, so use that (at least verson 5) if possible.
 
-As for other dependencies, it uses Niels Lohmann's [JSON reader](https://github.com/nlohmann/json), but that is already included in the sources as a single header file, `json.hpp`. The treap source `treap.hpp` is also included. It is based on a structure I used for a [HackerRank exercise](https://www.hackerrank.com/challenges/array-and-simple-queries) involving balanced trees.
+    As for other dependencies, it uses Niels Lohmann's [JSON reader](https://github.com/nlohmann/json), but that is already included in the sources as a single header file, `json.hpp`. The treap source `treap.hpp` is also included. It is based on a structure I used for a [HackerRank exercise](https://www.hackerrank.com/challenges/array-and-simple-queries) involving balanced trees.
 
-In summary, simply make sure the proper POSIX time functions are available and that one has an ISO C++14 conformant compiler.
+    In summary, simply make sure the proper POSIX time functions are available and that one has an ISO C++14 conformant compiler.
 
 ## Installation and Running Instructions
 First, as mentioned above, one must make sure the compiler environment variables are set: `CPP` should be set to the C++ compiler, `CFLAGS` should be set to any important options needed to specify a standard (e.g. for GCC and clang, `CFLAGS="-std=C++14"`), and finally `OPTS` for other options. I usually specify `-O2` for optimization).
